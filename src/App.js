@@ -3,6 +3,7 @@ import NewBlog from './components/NewBlog'
 import Blog from './components/Blog'
 import blogService from './services/blogs'
 import loginService from './services/login'
+import Togglable from './components/Togglable'
 
 const errorStyle = {
   border: '2px solid red',
@@ -106,10 +107,12 @@ const App = () => {
       {showInfoMessage()}
       <p>{user.name} logged in</p>
       <button onClick={handleLogout}>Log out</button>
-      <NewBlog 
-        setInfoMessage={setInfoMessage} 
-        blogs={blogs} 
-        setBlogs={setBlogs}></NewBlog>
+      <Togglable buttonLabel='Create new blog'>
+        <NewBlog 
+          setInfoMessage={setInfoMessage} 
+          blogs={blogs} 
+          setBlogs={setBlogs} />
+      </Togglable>
       {blogs.map(blog =>
         <Blog key={blog.id} blog={blog} />
       )}    
