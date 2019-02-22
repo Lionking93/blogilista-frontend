@@ -8,7 +8,7 @@ const Blog = ({ blog, showRemoveButton, handleLike, handleRemove }) => {
     handleLike: PropTypes.func.isRequired,
     handleRemove: PropTypes.func.isRequired
   }
-  
+
   const blogStyle = {
     border: '2px solid #ce6204',
     borderRadius: '5px',
@@ -40,6 +40,6 @@ const Blog = ({ blog, showRemoveButton, handleLike, handleRemove }) => {
         </div>
       </div>
     </div>
-)}
+  )}
 
 export default Blog

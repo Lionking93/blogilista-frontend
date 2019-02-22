@@ -12,7 +12,7 @@ const errorStyle = {
   padding: '5px',
   color: 'red',
   fontFamily: 'Comic Sans MS',
-  display: 'inline-block' 
+  display: 'inline-block'
 }
 
 const infoStyle = {
@@ -36,7 +36,7 @@ const App = () => {
   useEffect(() => {
     blogService.getAll().then(blogs =>
       setBlogs( blogs.sort((b1, b2) => b1.likes < b2.likes) )
-    )  
+    )
   }, [])
 
   useEffect(() => {
@@ -54,7 +54,7 @@ const App = () => {
     try {
       const user = await loginService.login({
         username, password
-      })  
+      })
 
       window.localStorage.setItem(
         'loggedInBloglistUser', JSON.stringify(user)
@@ -122,12 +122,12 @@ const App = () => {
       const newBlog = await blogService.addNewBlog({ title, author, url })
       const blogs = await blogService.getAll()
       setBlogs( blogs.sort((b1, b2) => b1.likes < b2.likes) )
- 
+
       setInfoMessage(`A new blog ${newBlog.title} added`)
       setTimeout(() => {
         setInfoMessage(null)
       }, 5000)
-      
+
     } catch (error) {
       console.log(error.response.data.error)
     }
@@ -140,11 +140,11 @@ const App = () => {
       <form onSubmit={handleLogin}>
         <div>
           <label htmlFor='username'>Käyttäjätunnus</label>
-          <input onChange={({target}) => setUsername(target.value)} id='username' type='text' />
+          <input onChange={({ target }) => setUsername(target.value)} id='username' type='text' />
         </div>
         <div>
           <label htmlFor='password'>Salasana</label>
-          <input onChange={({target}) => setPassword(target.value)} id='password' type='text' />
+          <input onChange={({ target }) => setPassword(target.value)} id='password' type='text' />
         </div>
         <input type='submit' value='Kirjaudu' />
       </form>
@@ -158,26 +158,26 @@ const App = () => {
       <p>{user.name} logged in</p>
       <button onClick={handleLogout}>Log out</button>
       <Togglable buttonLabel='Create new blog'>
-        <NewBlog 
+        <NewBlog
           handleAddBlog={handleAddBlog}
           setTitle={setTitle}
           setAuthor={setAuthor}
           setUrl={setUrl} />
       </Togglable>
       {blogs.map(blog =>
-        <Blog 
-          key={blog.id} 
+        <Blog
+          key={blog.id}
           blog={blog}
           showRemoveButton={blog.user.username === user.username}
           handleLike={() => handleLike(blog)}
           handleRemove={() => handleRemove(blog)} />
-      )}    
+      )}
     </div>
   )
 
   return (
     <div>
-      {user === null 
+      {user === null
         ? loginForm()
         : blogList() }
     </div>
