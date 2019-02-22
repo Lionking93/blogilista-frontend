@@ -1,6 +1,14 @@
 import React, { useState } from 'react'
+import PropTypes from 'prop-types'
 
 const Blog = ({ blog, showRemoveButton, handleLike, handleRemove }) => {
+  Blog.propTypes = {
+    blog: PropTypes.object.isRequired,
+    showRemoveButton: PropTypes.bool.isRequired,
+    handleLike: PropTypes.func.isRequired,
+    handleRemove: PropTypes.func.isRequired
+  }
+  
   const blogStyle = {
     border: '2px solid #ce6204',
     borderRadius: '5px',

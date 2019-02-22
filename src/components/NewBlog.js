@@ -1,6 +1,14 @@
 import React from 'react'
+import PropTypes from 'prop-types'
 
 const NewBlog = ({ handleAddBlog, setTitle, setAuthor, setUrl }) => {
+  NewBlog.propTypes = {
+    handleAddBlog: PropTypes.func.isRequired,
+    setTitle: PropTypes.func.isRequired,
+    setAuthor: PropTypes.func.isRequired,
+    setUrl: PropTypes.func.isRequired
+  }
+  
   return (
     <div>
       <h2>Create new</h2>
