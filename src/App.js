@@ -83,6 +83,15 @@ const App = () => {
       return (<div style={infoStyle}>{infoMessage}</div>)
   }
 
+  const handleLike = async (blog) => {
+    try {
+      blog.likes = blog.likes + 1
+      await blogService.addLike(blog)
+    } catch(error) {
+      console.log(error)
+    }
+  }
+
   const loginForm = () => (
     <div>
       {showErrorMessage()}
@@ -114,7 +123,7 @@ const App = () => {
           setBlogs={setBlogs} />
       </Togglable>
       {blogs.map(blog =>
-        <Blog key={blog.id} blog={blog} />
+        <Blog key={blog.id} blog={blog} handleLike={() => handleLike(blog)} />
       )}    
     </div>
   )
