@@ -29,6 +29,9 @@ const App = () => {
   const [errorMessage, setErrorMessage] = useState(null)
   const [infoMessage, setInfoMessage] = useState(null)
   const [user, setUser] = useState(null)
+  const [ title, setTitle ] = useState('')
+  const [ author, setAuthor ] = useState('')
+  const [ url, setUrl] = useState('')
 
   useEffect(() => {
     blogService.getAll().then(blogs =>
@@ -40,6 +43,7 @@ const App = () => {
     const loggedInUserJSON = window.localStorage.getItem('loggedInBloglistUser')
     if (loggedInUserJSON) {
       const user = JSON.parse(loggedInUserJSON)
+      blogService.setToken(user.token)
       setUser(user)
     }
   })
@@ -93,6 +97,42 @@ const App = () => {
     }
   }
 
+  const handleRemove = async (blog) => {
+    try {
+      if (window.confirm(`Remove blog ${blog.title}`)) {
+        await blogService.removeBlog(blog)
+        const indexOfBlogToBeRemoved = blogs.indexOf(blog)
+        blogs.splice(indexOfBlogToBeRemoved, 1)
+        setBlogs(blogs)
+      }
+    } catch(error) {
+      console.log(error)
+    }
+  }
+
+  const handleAddBlog = async (event) => {
+    event.preventDefault()
+
+    console.log('Add new blog with following info', title, author, url)
+    setTitle('')
+    setAuthor('')
+    setUrl('')
+
+    try {
+      const newBlog = await blogService.addNewBlog({ title, author, url })
+      const blogs = await blogService.getAll()
+      setBlogs( blogs.sort((b1, b2) => b1.likes < b2.likes) )
+ 
+      setInfoMessage(`A new blog ${newBlog.title} added`)
+      setTimeout(() => {
+        setInfoMessage(null)
+      }, 5000)
+      
+    } catch (error) {
+      console.log(error.response.data.error)
+    }
+  }
+
   const loginForm = () => (
     <div>
       {showErrorMessage()}
@@ -119,12 +159,18 @@ const App = () => {
       <button onClick={handleLogout}>Log out</button>
       <Togglable buttonLabel='Create new blog'>
         <NewBlog 
-          setInfoMessage={setInfoMessage} 
-          blogs={blogs} 
-          setBlogs={setBlogs} />
+          handleAddBlog={handleAddBlog}
+          setTitle={setTitle}
+          setAuthor={setAuthor}
+          setUrl={setUrl} />
       </Togglable>
       {blogs.map(blog =>
-        <Blog key={blog.id} blog={blog} handleLike={() => handleLike(blog)} />
+        <Blog 
+          key={blog.id} 
+          blog={blog}
+          showRemoveButton={blog.user.username === user.username}
+          handleLike={() => handleLike(blog)}
+          handleRemove={() => handleRemove(blog)} />
       )}    
     </div>
   )

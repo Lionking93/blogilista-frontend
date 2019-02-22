@@ -1,6 +1,6 @@
 import React, { useState } from 'react'
 
-const Blog = ({ blog, handleLike }) => {
+const Blog = ({ blog, showRemoveButton, handleLike, handleRemove }) => {
   const blogStyle = {
     border: '2px solid #ce6204',
     borderRadius: '5px',
@@ -18,6 +18,8 @@ const Blog = ({ blog, handleLike }) => {
 
   const fullBlogStyle = { display: showFullBlog ? '' : 'none' }
 
+  const removeButtonStyle = { display: showRemoveButton ? '' : 'none' }
+
   return (
     <div style={blogStyle}>
       <div onClick={toggleShowFullBlog}>{blog.title} {blog.author}</div>
@@ -25,6 +27,9 @@ const Blog = ({ blog, handleLike }) => {
         <div>{blog.url}</div>
         <div>{blog.likes} likes <button onClick={handleLike}>like</button></div>
         <div>added by {blog.user.name}</div>
+        <div style={removeButtonStyle}>
+          <button onClick={handleRemove}>remove</button>
+        </div>
       </div>
     </div>
 )}

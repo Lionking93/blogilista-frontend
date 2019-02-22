@@ -1,31 +1,6 @@
-import React, { useState } from 'react'
-import blogService from '../services/blogs'
+import React from 'react'
 
-const NewBlog = ({ setInfoMessage, blogs, setBlogs }) => {
-  const [ title, setTitle ] = useState('')
-  const [ author, setAuthor ] = useState('')
-  const [ url, setUrl] = useState('')
-  
-  const handleAddBlog = async (event) => {
-    event.preventDefault()
-
-    console.log('Add new blog with following info', title, author, url)
-    setTitle('')
-    setAuthor('')
-    setUrl('')
-
-    try {
-      const newBlog = await blogService.addNewBlog({ title, author, url })
-      setInfoMessage(`A new blog ${newBlog.title} added`)
-      setTimeout(() => {
-        setInfoMessage(null)
-      }, 5000)
-      setBlogs(blogs.concat(newBlog))
-    } catch (error) {
-      console.log(error.response.data.error)
-    }
-  }
-
+const NewBlog = ({ handleAddBlog, setTitle, setAuthor, setUrl }) => {
   return (
     <div>
       <h2>Create new</h2>
