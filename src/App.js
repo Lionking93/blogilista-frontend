@@ -14,11 +14,19 @@ const errorStyle = {
   display: 'inline-block' 
 }
 
+const infoStyle = {
+  ...errorStyle,
+  border: '2px solid green',
+  color: 'green'
+}
+
+
 const App = () => {
   const [blogs, setBlogs] = useState([])
   const [username, setUsername] = useState('')
   const [password, setPassword] = useState('')
   const [errorMessage, setErrorMessage] = useState(null)
+  const [infoMessage, setInfoMessage] = useState(null)
   const [user, setUser] = useState(null)
 
   useEffect(() => {
@@ -52,7 +60,7 @@ const App = () => {
       setUsername('')
       setPassword('')
     } catch(error) {
-      setErrorMessage('käyttäjätunnus tai salasana virheellinen')
+      setErrorMessage(error.response.data.error)
       setTimeout(() => {
         setErrorMessage(null)
       }, 5000)
@@ -67,6 +75,11 @@ const App = () => {
   const showErrorMessage = () => {
     if (errorMessage)
       return (<div style={errorStyle}>{errorMessage}</div>)
+  }
+
+  const showInfoMessage = () => {
+    if (infoMessage)
+      return (<div style={infoStyle}>{infoMessage}</div>)
   }
 
   const loginForm = () => (
@@ -90,9 +103,13 @@ const App = () => {
   const blogList = () => (
     <div>
       <h2>Blogs</h2>
+      {showInfoMessage()}
       <p>{user.name} logged in</p>
       <button onClick={handleLogout}>Log out</button>
-      <NewBlog blogs={blogs} setBlogs={setBlogs}></NewBlog>
+      <NewBlog 
+        setInfoMessage={setInfoMessage} 
+        blogs={blogs} 
+        setBlogs={setBlogs}></NewBlog>
       {blogs.map(blog =>
         <Blog key={blog.id} blog={blog} />
       )}    

@@ -1,7 +1,7 @@
 import React, { useState } from 'react'
 import blogService from '../services/blogs'
 
-const NewBlog = ({ blogs, setBlogs }) => {
+const NewBlog = ({ setInfoMessage, blogs, setBlogs }) => {
   const [ title, setTitle ] = useState('')
   const [ author, setAuthor ] = useState('')
   const [ url, setUrl] = useState('')
@@ -16,6 +16,10 @@ const NewBlog = ({ blogs, setBlogs }) => {
 
     try {
       const newBlog = await blogService.addNewBlog({ title, author, url })
+      setInfoMessage(`A new blog ${newBlog.title} added`)
+      setTimeout(() => {
+        setInfoMessage(null)
+      }, 5000)
       setBlogs(blogs.concat(newBlog))
     } catch (error) {
       console.log(error.response.data.error)
