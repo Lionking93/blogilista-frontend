@@ -32,7 +32,7 @@ const App = () => {
 
   useEffect(() => {
     blogService.getAll().then(blogs =>
-      setBlogs( blogs )
+      setBlogs( blogs.sort((b1, b2) => b1.likes < b2.likes) )
     )  
   }, [])
 
@@ -87,6 +87,7 @@ const App = () => {
     try {
       blog.likes = blog.likes + 1
       await blogService.addLike(blog)
+      setBlogs( blogs.concat().sort((b1, b2) => b1.likes < b2.likes) )
     } catch(error) {
       console.log(error)
     }
