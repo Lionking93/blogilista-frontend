@@ -164,14 +164,16 @@ const App = () => {
           setAuthor={setAuthor}
           setUrl={setUrl} />
       </Togglable>
-      {blogs.map(blog =>
-        <Blog
-          key={blog.id}
-          blog={blog}
-          showRemoveButton={blog.user.username === user.username}
-          handleLike={() => handleLike(blog)}
-          handleRemove={() => handleRemove(blog)} />
-      )}
+      <div id='blogList'>
+        {blogs.map(blog =>
+          <Blog
+            key={blog.id}
+            blog={blog}
+            showRemoveButton={blog.user.username === user.username}
+            handleLike={() => handleLike(blog)}
+            handleRemove={() => handleRemove(blog)} />
+        )}
+      </div>
     </div>
   )
 
