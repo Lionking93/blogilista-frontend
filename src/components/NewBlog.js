@@ -1,12 +1,12 @@
 import React from 'react'
 import PropTypes from 'prop-types'
 
-const NewBlog = ({ handleAddBlog, setTitle, setAuthor, setUrl }) => {
+const NewBlog = ({ handleAddBlog, title, author, url }) => {
   NewBlog.propTypes = {
     handleAddBlog: PropTypes.func.isRequired,
-    setTitle: PropTypes.func.isRequired,
-    setAuthor: PropTypes.func.isRequired,
-    setUrl: PropTypes.func.isRequired
+    title: PropTypes.object.isRequired,
+    author: PropTypes.object.isRequired,
+    url: PropTypes.object.isRequired
   }
 
   return (
@@ -15,15 +15,15 @@ const NewBlog = ({ handleAddBlog, setTitle, setAuthor, setUrl }) => {
       <form onSubmit={handleAddBlog}>
         <div>
           <label htmlFor='blogTitle'>Title: </label>
-          <input onChange={({ target }) => setTitle(target.value)} id='blogTitle' type='text' />
+          <input {...title.inputProps} id='blogTitle' />
         </div>
         <div>
           <label htmlFor='blogAuthor'>Author: </label>
-          <input onChange={({ target }) => setAuthor(target.value)} id='blogAuthor' type='text' />
+          <input {...author.inputProps} id='blogAuthor' />
         </div>
         <div>
           <label htmlFor='blogUrl'>Url: </label>
-          <input onChange={({ target }) => setUrl(target.value)} id='blogUrl' type='text' />
+          <input {...url.inputProps} id='blogUrl' />
         </div>
         <input type='submit' value='Create' />
       </form>

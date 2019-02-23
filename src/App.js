@@ -30,9 +30,9 @@ const App = () => {
   const [errorMessage, setErrorMessage] = useState(null)
   const [infoMessage, setInfoMessage] = useState(null)
   const [user, setUser] = useState(null)
-  const [ title, setTitle ] = useState('')
-  const [ author, setAuthor ] = useState('')
-  const [ url, setUrl] = useState('')
+  const title = useField('text')
+  const author = useField('text')
+  const url = useField('text')
 
   useEffect(() => {
     const loggedInUserJSON = window.localStorage.getItem('loggedInBloglistUser')
@@ -53,14 +53,13 @@ const App = () => {
 
   const handleLogin = async (event) => {
     event.preventDefault()
-    console.log(username)
-    console.log(password)
+
     try {
       const user = await loginService.login({
-        username: username.value,
-        password: password.value
+        username: username.inputProps.value,
+        password: password.inputProps.value
       })
-
+      console.log(username)
       window.localStorage.setItem(
         'loggedInBloglistUser', JSON.stringify(user)
       )
@@ -73,6 +72,9 @@ const App = () => {
         setErrorMessage(null)
       }, 5000)
     }
+
+    username.reset()
+    password.reset()
   }
 
   const handleLogout = () => {
@@ -116,17 +118,19 @@ const App = () => {
   const handleAddBlog = async (event) => {
     event.preventDefault()
 
-    console.log('Add new blog with following info', title, author, url)
-    setTitle('')
-    setAuthor('')
-    setUrl('')
+    console.log('Add new blog with following info', title.inputProps.value, author.inputProps.value, url.inputProps.value)
 
     try {
-      const newBlog = await blogService.addNewBlog({ title, author, url })
+      const newBlog = await blogService.addNewBlog({ 
+        title: title.inputProps.value,
+        author: author.inputProps.value,
+        url: url.inputProps.value
+      })
       const blogs = await blogService.getAll()
       setBlogs( blogs.sort((b1, b2) => b1.likes < b2.likes) )
 
       setInfoMessage(`A new blog ${newBlog.title} added`)
+
       setTimeout(() => {
         setInfoMessage(null)
       }, 5000)
@@ -134,6 +138,10 @@ const App = () => {
     } catch (error) {
       console.log(error.response.data.error)
     }
+
+    title.reset()
+    author.reset()
+    url.reset()
   }
 
   const loginForm = () => (
@@ -143,11 +151,11 @@ const App = () => {
       <form onSubmit={handleLogin}>
         <div>
           <label htmlFor='username'>Käyttäjätunnus</label>
-          <input {...username} id='username' />
+          <input {...username.inputProps} id='username' />
         </div>
         <div>
           <label htmlFor='password'>Salasana</label>
-          <input {...password} id='password' />
+          <input {...password.inputProps} id='password' />
         </div>
         <input type='submit' value='Kirjaudu' />
       </form>
@@ -163,9 +171,9 @@ const App = () => {
       <Togglable buttonLabel='Create new blog'>
         <NewBlog
           handleAddBlog={handleAddBlog}
-          setTitle={setTitle}
-          setAuthor={setAuthor}
-          setUrl={setUrl} />
+          title={title}
+          author={author}
+          url={url} />
       </Togglable>
       <div id='blogList'>
         {blogs.map(blog =>
