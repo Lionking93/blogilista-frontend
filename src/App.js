@@ -4,6 +4,7 @@ import Blog from './components/Blog'
 import blogService from './services/blogs'
 import loginService from './services/login'
 import Togglable from './components/Togglable'
+import { useField } from './hooks/index'
 
 const errorStyle = {
   border: '2px solid red',
@@ -24,20 +25,14 @@ const infoStyle = {
 
 const App = () => {
   const [blogs, setBlogs] = useState([])
-  const [username, setUsername] = useState('')
-  const [password, setPassword] = useState('')
+  const username = useField('text')
+  const password = useField('text')
   const [errorMessage, setErrorMessage] = useState(null)
   const [infoMessage, setInfoMessage] = useState(null)
   const [user, setUser] = useState(null)
   const [ title, setTitle ] = useState('')
   const [ author, setAuthor ] = useState('')
   const [ url, setUrl] = useState('')
-
-  useEffect(() => {
-    blogService.getAll().then(blogs =>
-      setBlogs( blogs.sort((b1, b2) => b1.likes < b2.likes) )
-    )
-  }, [])
 
   useEffect(() => {
     const loggedInUserJSON = window.localStorage.getItem('loggedInBloglistUser')
@@ -48,12 +43,22 @@ const App = () => {
     }
   })
 
+  useEffect(() => {
+    blogService.getAll().then(blogs =>
+      setBlogs( blogs.sort((b1, b2) => b1.likes < b2.likes) )
+    )
+  }, [])
+
+
+
   const handleLogin = async (event) => {
     event.preventDefault()
-
+    console.log(username)
+    console.log(password)
     try {
       const user = await loginService.login({
-        username, password
+        username: username.value,
+        password: password.value
       })
 
       window.localStorage.setItem(
@@ -62,8 +67,6 @@ const App = () => {
 
       blogService.setToken(user.token)
       setUser(user)
-      setUsername('')
-      setPassword('')
     } catch(error) {
       setErrorMessage(error.response.data.error)
       setTimeout(() => {
@@ -140,11 +143,11 @@ const App = () => {
       <form onSubmit={handleLogin}>
         <div>
           <label htmlFor='username'>Käyttäjätunnus</label>
-          <input onChange={({ target }) => setUsername(target.value)} id='username' type='text' />
+          <input {...username} id='username' />
         </div>
         <div>
           <label htmlFor='password'>Salasana</label>
-          <input onChange={({ target }) => setPassword(target.value)} id='password' type='text' />
+          <input {...password} id='password' />
         </div>
         <input type='submit' value='Kirjaudu' />
       </form>
